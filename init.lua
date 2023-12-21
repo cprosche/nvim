@@ -49,6 +49,7 @@ local plugins = {
 					"heex",
 					"javascript",
 					"html",
+                    "css",
 				},
 				sync_install = false,
 				highlight = { enable = true },
