@@ -26,11 +26,13 @@ end
 opt.rtp:prepend(lazypath)
 
 local plugins = {
+	"nvim-lua/plenary.nvim",
 	{
 		"ellisonleao/gruvbox.nvim",
 		priority = 1000,
-		config = true,
-		opts = ...,
+		config = function()
+			vim.cmd([[colorscheme gruvbox]])
+		end,
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
@@ -89,6 +91,50 @@ local plugins = {
 	},
 	{
 		"williamboman/mason.nvim",
+		dependencies = {
+			"williamboman/mason-lspconfig.nvim",
+			"WhoIsSethDaniel/mason-tool-installer.nvim",
+		},
+		config = function()
+			require("mason").setup({
+				ui = {
+					icons = {
+						package_installed = "✓",
+						package_pending = "➜",
+						package_uninstalled = "✗",
+					},
+				},
+			})
+
+			require("mason-lspconfig").setup({
+				-- list of servers for mason to install
+				ensure_installed = {
+					"tsserver",
+					"html",
+					"cssls",
+					"tailwindcss",
+					"svelte",
+					"lua_ls",
+					"graphql",
+					"emmet_ls",
+					"prismals",
+					"pyright",
+				},
+				-- auto-install configured servers (with lspconfig)
+				automatic_installation = true, -- not the same as ensure_installed
+			})
+
+			require("mason-tool-installer").setup({
+				ensure_installed = {
+					"prettier", -- prettier formatter
+					"stylua", -- lua formatter
+					"isort", -- python formatter
+					"black", -- python formatter
+					"pylint", -- python linter
+					"eslint_d", -- js linter
+				},
+			})
+		end,
 	},
 	{
 		"stevearc/conform.nvim",
@@ -128,18 +174,140 @@ local plugins = {
 			end, { desc = "Format file or range (in visual mode)" })
 		end,
 	},
+	{
+		"hrsh7th/nvim-cmp",
+		event = "InsertEnter",
+		dependencies = {
+			"hrsh7th/cmp-buffer", -- source for text in buffer
+			"hrsh7th/cmp-path", -- source for file system paths
+			"L3MON4D3/LuaSnip",
+		},
+		config = function()
+			local cmp = require("cmp")
+
+			cmp.setup({
+				sources = cmp.config.sources({
+					{ name = "nvim_lsp" },
+					{ name = "buffer" }, -- text within current buffer
+					{ name = "path" }, -- file system paths
+				}),
+				mapping = cmp.mapping.preset.insert({
+					["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
+					["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
+					["<C-e>"] = cmp.mapping.abort(), -- close completion window
+					["<CR>"] = cmp.mapping.confirm({ select = true }),
+				}),
+			})
+		end,
+	},
+	{
+		"neovim/nvim-lspconfig",
+		event = { "BufReadPre", "BufNewFile" },
+		dependencies = {
+			"hrsh7th/cmp-nvim-lsp",
+			{ "antosha417/nvim-lsp-file-operations", config = true },
+		},
+		config = function()
+			-- import lspconfig plugin
+			local lspconfig = require("lspconfig")
+
+			-- import cmp-nvim-lsp plugin
+			local cmp_nvim_lsp = require("cmp_nvim_lsp")
+
+			local on_attach = function() end
+
+			-- used to enable autocompletion (assign to every lsp server config)
+			local capabilities = cmp_nvim_lsp.default_capabilities()
+
+			-- Change the Diagnostic symbols in the sign column (gutter)
+			-- (not in youtube nvim video)
+			local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+			for type, icon in pairs(signs) do
+				local hl = "DiagnosticSign" .. type
+				vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+			end
+
+			-- configure html server
+			lspconfig["html"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+			})
+
+			-- configure typescript server with plugin
+			lspconfig["tsserver"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+			})
+
+			-- configure css server
+			lspconfig["cssls"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+			})
+
+			-- configure tailwindcss server
+			lspconfig["tailwindcss"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+			})
+
+			-- configure svelte server
+			lspconfig["svelte"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+			})
+
+			-- configure prisma orm server
+			lspconfig["prismals"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+			})
+
+			-- configure graphql language server
+			lspconfig["graphql"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+				filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+			})
+
+			-- configure emmet language server
+			lspconfig["emmet_ls"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+				filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
+			})
+
+			-- configure python server
+			lspconfig["pyright"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+			})
+
+			-- configure lua server (with special settings)
+			lspconfig["lua_ls"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+				settings = { -- custom settings for lua
+					Lua = {
+						-- make the language server recognize "vim" global
+						diagnostics = {
+							globals = { "vim" },
+						},
+						workspace = {
+							-- make language server aware of runtime files
+							library = {
+								[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+								[vim.fn.stdpath("config") .. "/lua"] = true,
+							},
+						},
+					},
+				},
+			})
+		end,
+	},
 }
 
 require("lazy").setup(plugins)
-
-vim.cmd([[colorscheme gruvbox]])
-
-require("mason").setup({
-	ui = {
-		icons = {
-			package_installed = "✓",
-			package_pending = "➜",
-			package_uninstalled = "✗",
-		},
-	},
-})
