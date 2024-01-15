@@ -9,6 +9,7 @@ opt.autoindent = true
 opt.wrap = false
 opt.background = "dark"
 opt.termguicolors = true
+opt.clipboard = "unnamedplus"
 vim.g.mapleader = ";"
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -214,7 +215,7 @@ local plugins = {
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
 					["<C-e>"] = cmp.mapping.abort(), -- close completion window
-					["<CR>"] = cmp.mapping.confirm({ select = false }),
+					["<CR>"] = cmp.mapping.confirm({ select = true }),
 				}),
 				-- sources for autocompletion
 				sources = cmp.config.sources({
