@@ -11,6 +11,8 @@ opt.background = "dark"
 opt.termguicolors = true
 opt.clipboard = "unnamedplus"
 vim.g.mapleader = ";"
+opt.spell = true
+opt.spelllang = "en_us"
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
