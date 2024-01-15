@@ -30,6 +30,7 @@ opt.rtp:prepend(lazypath)
 
 local plugins = {
 	"nvim-lua/plenary.nvim",
+	"isobit/vim-caddyfile",
 	{
 		"ellisonleao/gruvbox.nvim",
 		priority = 1000,
