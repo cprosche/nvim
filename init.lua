@@ -57,6 +57,8 @@ local plugins = {
 					"html",
 					"css",
 					"go",
+					"rust",
+					"toml",
 				},
 				sync_install = false,
 				highlight = { enable = true },
@@ -125,6 +127,7 @@ local plugins = {
 					"prismals",
 					"pyright",
 					"gopls",
+					"rust_analyzer",
 				},
 				-- auto-install configured servers (with lspconfig)
 				automatic_installation = true, -- not the same as ensure_installed
@@ -164,6 +167,7 @@ local plugins = {
 					graphql = { "prettier" },
 					lua = { "stylua" },
 					go = { "gopls" },
+					rust = { "rustfmt" },
 				},
 				format_on_save = {
 					lsp_fallback = true,
@@ -368,6 +372,12 @@ local plugins = {
 				on_attach = on_attach,
 			})
 
+			-- configure python server
+			lspconfig["rust_analyzer"].setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+			})
+
 			-- configure lua server (with special settings)
 			lspconfig["lua_ls"].setup({
 				capabilities = capabilities,
@@ -389,6 +399,11 @@ local plugins = {
 				},
 			})
 		end,
+	},
+	{
+		"mrcjkb/rustaceanvim",
+		version = "^3", -- Recommended
+		ft = { "rust" },
 	},
 }
 
