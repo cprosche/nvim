@@ -127,7 +127,6 @@ local plugins = {
 					"prismals",
 					"pyright",
 					"gopls",
-					"rust_analyzer",
 				},
 				-- auto-install configured servers (with lspconfig)
 				automatic_installation = true, -- not the same as ensure_installed
@@ -167,7 +166,6 @@ local plugins = {
 					graphql = { "prettier" },
 					lua = { "stylua" },
 					go = { "gopls" },
-					rust = { "rustfmt" },
 				},
 				format_on_save = {
 					lsp_fallback = true,
@@ -368,12 +366,6 @@ local plugins = {
 
 			-- configure python server
 			lspconfig["pyright"].setup({
-				capabilities = capabilities,
-				on_attach = on_attach,
-			})
-
-			-- configure python server
-			lspconfig["rust_analyzer"].setup({
 				capabilities = capabilities,
 				on_attach = on_attach,
 			})
