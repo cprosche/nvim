@@ -397,6 +397,13 @@ local plugins = {
 		version = "^3", -- Recommended
 		ft = { "rust" },
 	},
+	{
+		"numToStr/Comment.nvim",
+		lazy = false,
+		config = function()
+			require("Comment").setup()
+		end,
+	},
 }
 
 require("lazy").setup(plugins)
