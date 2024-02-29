@@ -59,6 +59,7 @@ local plugins = {
 					"go",
 					"rust",
 					"toml",
+					"c_sharp",
 				},
 				sync_install = false,
 				highlight = { enable = true },
