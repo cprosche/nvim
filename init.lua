@@ -123,7 +123,6 @@ local plugins = {
 					"tailwindcss",
 					"svelte",
 					"lua_ls",
-					"graphql",
 					"emmet_ls",
 					"prismals",
 					"pyright",
@@ -164,7 +163,6 @@ local plugins = {
 					json = { "prettier" },
 					yaml = { "prettier" },
 					markdown = { "prettier" },
-					graphql = { "prettier" },
 					lua = { "stylua" },
 					go = { "gopls" },
 				},
@@ -349,13 +347,6 @@ local plugins = {
 			lspconfig["prismals"].setup({
 				capabilities = capabilities,
 				on_attach = on_attach,
-			})
-
-			-- configure graphql language server
-			lspconfig["graphql"].setup({
-				capabilities = capabilities,
-				on_attach = on_attach,
-				filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
 			})
 
 			-- configure emmet language server
