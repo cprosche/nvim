@@ -32,6 +32,7 @@ opt.rtp:prepend(lazypath)
 -- load all the plugins
 local plugins = {
 	"nvim-lua/plenary.nvim",
+	-- caddyfile support
 	"isobit/vim-caddyfile",
 	{
 		"ellisonleao/gruvbox.nvim",
