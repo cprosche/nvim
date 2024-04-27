@@ -31,6 +31,7 @@ opt.rtp:prepend(lazypath)
 
 -- load all the plugins
 local plugins = {
+	-- utility functions used by a ton of plugins
 	"nvim-lua/plenary.nvim",
 	-- caddyfile support
 	"isobit/vim-caddyfile",
