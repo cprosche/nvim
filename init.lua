@@ -294,6 +294,7 @@ local plugins = {
 		config = function()
 			-- import lspconfig plugin
 			local lspconfig = require("lspconfig")
+			local util = require("lspconfig/util")
 
 			-- import cmp-nvim-lsp plugin
 			local cmp_nvim_lsp = require("cmp_nvim_lsp")
@@ -329,10 +330,22 @@ local plugins = {
 				on_attach = on_attach,
 			})
 
-			-- configure css server
-			lspconfig["gopls"].setup({
+			-- configure gopls server
+			lspconfig.gopls.setup({
 				capabilities = capabilities,
 				on_attach = on_attach,
+				cmd = { "gopls" },
+				filetypes = { "go", "gomod", "gowork", "gotmpl" },
+				root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+				settings = {
+					gopls = {
+						completeUnimported = true,
+						usePlaceholders = true,
+						analyses = {
+							unusedparams = true,
+						},
+					},
+				},
 			})
 
 			-- configure tailwindcss server
@@ -397,7 +410,7 @@ local plugins = {
 		"numToStr/Comment.nvim",
 		lazy = false,
 		config = function()
-			require("Comment").setup()
+			require("Comment").setup() -- gcc to comment line or gc to line comment highlighted
 		end,
 	},
 	{
